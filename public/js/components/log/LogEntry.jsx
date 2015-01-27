@@ -25,7 +25,7 @@ var LogEntry = React.createClass({
         return (
             <tr>
             <td>
-            {d.getDate() + "." + d.getMonth() + 1 + "." + d.getFullYear()}<br />
+            {d.getDate() + "." + (d.getMonth() + 1) + "." + d.getFullYear()}<br />
             kl. {d.getHours() + "." + d.getMinutes()}
             </td>
             <td>
