@@ -32,7 +32,7 @@ var LogEntry = React.createClass({
             <strong>{this.props.event.data.name}</strong><em>[{this.props.event.type}]</em>
             </td>
             <td style={{maxWidth: 300}}>
-            {false ? this.renderFullEventData() : this.renderEventDiff()}
+              {this.renderEventDiff()}
             </td>
             <td>{this.props.event.createdBy}</td>
             </tr>
