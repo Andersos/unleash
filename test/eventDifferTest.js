@@ -21,18 +21,19 @@ describe('eventDiffer', function () {
         var events = [
             {
                 type: eventType.featureUpdated,
-                data: {name: name, description: desc, strategy: 'default', enabled: true, parameters: {}}
+                data: {name: name, description: desc, strategy: 'default', enabled: true, parameters: {value: 2 }}
             },
             {
                 type: eventType.featureCreated,
-                data: {name: name, description: desc, strategy: 'default', enabled: false, parameters: {}}
+                data: {name: name, description: desc, strategy: 'default', enabled: false, parameters: {value: 1}}
             }
         ];
 
         eventDiffer.addDiffs(events);
 
         assert.deepEqual(events[0].diffs, [
-            {kind: 'E', path: ["enabled"], lhs: true, rhs: false}
+            {kind: 'E', path: ["enabled"], lhs: false, rhs: true},
+            {kind: 'E', path: ["parameters", "value"], lhs: 1, rhs: 2}
         ]);
 
         assert.equal(events[1].diffs, undefined);
@@ -60,8 +61,8 @@ describe('eventDiffer', function () {
 
         eventDiffer.addDiffs(events);
 
-        assert.equal(events[0].diffs[0].rhs, false);
-        assert.equal(events[1].diffs[0].rhs, true);
+        assert.equal(events[0].diffs[0].rhs, true);
+        assert.equal(events[1].diffs[0].rhs, false);
         assert.equal(events[2].diffs, undefined);
         assert.equal(events[3].diffs, undefined);
     });
