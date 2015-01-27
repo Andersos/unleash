@@ -8,10 +8,10 @@ var LogEntryList = React.createClass({
 
     render: function() {
         var logEntryNodes = this.props.events.map(function(event) {
-            return <LogEntry event={event} key={event.name} />;
+            return <LogEntry event={event} key={event.id} />;
         });
         return (
-            <div className=''>
+            <div>
                 <table className='outerborder zebra-striped'>
                     <thead>
                         <tr>

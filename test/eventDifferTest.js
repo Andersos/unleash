@@ -36,7 +36,7 @@ describe('eventDiffer', function () {
             {kind: 'E', path: ["parameters", "value"], lhs: 1, rhs: 2}
         ]);
 
-        assert.equal(events[1].diffs, undefined);
+        assert.strictEqual(events[1].diffs, null);
     });
 
     it('diffs only against features with the same name', function () {
@@ -61,9 +61,37 @@ describe('eventDiffer', function () {
 
         eventDiffer.addDiffs(events);
 
-        assert.equal(events[0].diffs[0].rhs, true);
-        assert.equal(events[1].diffs[0].rhs, false);
-        assert.equal(events[2].diffs, undefined);
-        assert.equal(events[3].diffs, undefined);
+        assert.strictEqual(events[0].diffs[0].rhs, true);
+        assert.strictEqual(events[1].diffs[0].rhs, false);
+        assert.strictEqual(events[2].diffs, null);
+        assert.strictEqual(events[3].diffs, null);
+    });
+
+    it('sets an empty array of diffs if nothing was changed', function () {
+        var events = [
+            {
+                type: eventType.featureUpdated,
+                data: {name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {}}
+            },
+            {
+                type: eventType.featureCreated,
+                data: {name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {}}
+            }
+        ];
+
+        eventDiffer.addDiffs(events);
+        assert.deepEqual(events[0].diffs, []);
+    });
+
+    it('sets diffs to null if there was nothing to diff against', function () {
+        var events = [
+            {
+                type: eventType.featureUpdated,
+                data: {name: 'foo', description: 'desc', strategy: 'default', enabled: true, parameters: {}}
+            }
+        ];
+
+        eventDiffer.addDiffs(events);
+        assert.strictEqual(events[0].diffs, null);
     });
 });

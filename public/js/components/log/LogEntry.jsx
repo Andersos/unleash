@@ -24,17 +24,17 @@ var LogEntry = React.createClass({
 
         return (
             <tr>
-                <td>
-                    {d.getDate() + "." + d.getMonth() + 1 + "." + d.getFullYear()}<br />
-                    kl. {d.getHours() + "." + d.getMinutes()}
-                </td>
-                <td>
-                    <strong>{this.props.event.data.name}</strong><em>[{this.props.event.type}]</em>
-                </td>
-                <td style={{maxWidth: 300}}>
-                    {false ? this.renderFullEventData() : this.renderEventDiff()}
-                </td>
-                <td>{this.props.event.createdBy}</td>
+            <td>
+            {d.getDate() + "." + d.getMonth() + 1 + "." + d.getFullYear()}<br />
+            kl. {d.getHours() + "." + d.getMinutes()}
+            </td>
+            <td>
+            <strong>{this.props.event.data.name}</strong><em>[{this.props.event.type}]</em>
+            </td>
+            <td style={{maxWidth: 300}}>
+            {false ? this.renderFullEventData() : this.renderEventDiff()}
+            </td>
+            <td>{this.props.event.createdBy}</td>
             </tr>
         );
     },
@@ -51,24 +51,32 @@ var LogEntry = React.createClass({
 
     renderEventDiff: function() {
         if (this.props.event.diffs) {
-            var changes = this.props.event.diffs.map(function(diff) {
-                var spadenClass = SPADEN_CLASS[diff.kind]
-                var prefix      = DIFF_PREFIXES[diff.kind];
-                var parts       = [];
-                var key         = diff.path.join('.');
-
-                if (diff.lhs) { parts.push(diff.lhs) };
-                if (diff.rhs) { parts.push(diff.rhs) };
-
-                var change = parts.length === 2 ? parts.join(' => ') : parts.join(' ');
-
-                return (<div className={spadenClass}>{prefix} {key}: {change}</div>)
-            });
-
-            return (<code className='smalltext man'>{changes}</code>)
+            var changes = this.props.event.diffs.map(this.buildDiff);
+            return (<code className='smalltext man'>{changes.length === 0 ? '(no changes)' : changes}</code>)
         } else {
             return this.renderFullEventData();
         }
+    },
+
+    buildDiff: function(diff, idx) {
+        var change;
+        var key = diff.path.join('.');
+
+        if (diff.lhs !== undefined && diff.rhs !== undefined) {
+            change = (
+                <div>
+                  <div className={SPADEN_CLASS.D}>- {key}: {JSON.stringify(diff.lhs)}</div>
+                  <div className={SPADEN_CLASS.N}>+ {key}: {JSON.stringify(diff.rhs)}</div>
+                </div>
+            );
+        } else {
+            var spadenClass = SPADEN_CLASS[diff.kind]
+            var prefix      = DIFF_PREFIXES[diff.kind];
+
+            change = (<div className={spadenClass}>{prefix} {key}: {JSON.stringify(diff.rhs)}</div>)
+        }
+
+        return (<div key={idx}>{change}</div>)
     }
 
 });
