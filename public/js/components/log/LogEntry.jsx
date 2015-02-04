@@ -50,7 +50,7 @@ var LogEntry = React.createClass({
     },
 
     renderEventDiff: function() {
-        if (this.props.event.diffs) {
+        if (!this.props.showFullEvents && this.props.event.diffs) {
             var changes = this.props.event.diffs.map(this.buildDiff);
             return (<code className='smalltext man'>{changes.length === 0 ? '(no changes)' : changes}</code>)
         } else {
